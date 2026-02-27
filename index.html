@@ -1,0 +1,85 @@
+<!doctype html>
+<html lang="ar" dir="rtl">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>ExpertCon Portal Web</title>
+    <link rel="stylesheet" href="styles.css" />
+  </head>
+  <body>
+    <div class="app-layout">
+      <aside class="sidebar">
+        <div class="logo">ExpertCon</div>
+        <p class="sidebar-title">قائمة النماذج والطباعة</p>
+        <button data-action="note">📝 طباعة ملاحظة</button>
+        <button data-action="card">📇 طباعة بزنس كارت</button>
+        <button data-action="transfer">🚚 نية الانتقال</button>
+        <button data-action="lmra">💼 تسجيل سوق العمل</button>
+        <button data-action="passport">🛂 تمديد الجوازات</button>
+      </aside>
+
+      <main class="main">
+        <header class="top-bar">
+          <div class="search-row">
+            <label for="serialInput">رقم الطلب:</label>
+            <input id="serialInput" type="text" placeholder="مثال: 102" />
+            <button id="openOrderBtn">فتح الطلب</button>
+          </div>
+          <button id="openFolderBtn" disabled>📂 فتح المجلد المحلي</button>
+        </header>
+
+        <section class="dashboard" id="dashboard"></section>
+
+        <section class="tabs">
+          <div class="tab-heads">
+            <button class="tab-btn active" data-tab="current">إدارة الطلب الحالي</button>
+            <button class="tab-btn" data-tab="active">متابعة كافة الطلبات النشطة</button>
+          </div>
+
+          <div class="tab-panel active" id="current-tab">
+            <div class="split">
+              <div class="card">
+                <h3>الملفات المرفقة (سحب وإفلات)</h3>
+                <div id="dropZone" class="drop-zone">اسحب ملفاتك هنا أو اضغط للإضافة</div>
+                <input id="fileInput" type="file" multiple hidden />
+                <table>
+                  <thead>
+                    <tr><th>اسم الملف</th><th>الحجم</th></tr>
+                  </thead>
+                  <tbody id="attachmentsTable"></tbody>
+                </table>
+              </div>
+
+              <div class="card preview-card">
+                <h3>معاينة ذكية</h3>
+                <div id="preview" class="preview">لا يوجد ملف محدد</div>
+              </div>
+            </div>
+          </div>
+
+          <div class="tab-panel" id="active-tab">
+            <div class="active-header">
+              <h3>متابعة الطلبات النشطة سحابياً</h3>
+              <button id="refreshOrdersBtn">تحديث القائمة 🔄</button>
+            </div>
+            <table>
+              <thead>
+                <tr>
+                  <th data-sort="serial">رقم</th>
+                  <th data-sort="client">العميل</th>
+                  <th data-sort="service">نوع العمل</th>
+                  <th data-sort="status">الحالة</th>
+                  <th data-sort="price">المبلغ</th>
+                </tr>
+              </thead>
+              <tbody id="activeOrdersTable"></tbody>
+            </table>
+          </div>
+        </section>
+      </main>
+    </div>
+
+    <dialog id="modal"></dialog>
+    <script src="app.js"></script>
+  </body>
+</html>

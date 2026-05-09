@@ -1,142 +1,146 @@
-# Basma Pro Services Production Architecture
+# BASMA – Government Transaction Clearance Platform Architecture
 
-This document describes the production implementation plan for the premium Arabic-first website and internal management system.
+BASMA is designed as a premium Bahraini government transaction clearing platform for individuals, companies, and internal operations teams. The production version should preserve the Arabic/English, mobile-first experience demonstrated in the static prototype while adding secure data, authentication, payments, notifications, and file workflows.
 
-## Stack
+## Experience Principles
 
-- Frontend: Next.js App Router, React Server Components, TailwindCSS, Cairo for Arabic, Poppins for English.
-- Backend: Node.js with Express or Next.js Route Handlers behind an API gateway.
-- Database: PostgreSQL for relational accounting/CRM data. MongoDB can be used for flexible template drafts if preferred.
-- Authentication: JWT access tokens, refresh tokens, bcrypt password hashing, role-based access control.
-- Storage: Cloudinary or Firebase Storage for attachments, generated PDFs, Word files, and service images.
-- AI: OpenAI API for marketing copy and document generation.
+- Arabic RTL and English LTR interfaces with instant language switching.
+- Luxury government-technology visual identity using deep blue, white, soft gray, and gold accents.
+- Client journeys for quick requests, multi-step applications, tracking, payments, and document uploads.
+- Staff journeys for case assignment, status updates, Kanban operations, reporting, internal notes, and exports.
+- Secure defaults: OTP, email verification, role-based access, encrypted storage, activity logs, and session management.
 
-## Core Tables
+## Recommended Stack
+
+- Frontend: Next.js App Router, React, Tailwind CSS, Framer Motion, Inter for English, Tajawal/Cairo for Arabic.
+- Backend: Supabase or Firebase for rapid launch; Next.js Route Handlers or a Node.js API gateway for custom business logic.
+- Database: PostgreSQL through Supabase for relational CRM, payments, reporting, and audit trails; Firestore is an alternative for a Firebase-first implementation.
+- Authentication: Supabase Auth or Firebase Auth with OTP, email verification, password reset, and role claims.
+- Storage: Supabase Storage or Firebase Cloud Storage with signed URLs, file categorization, virus scanning, and OCR metadata.
+- Payments: Bahrain-ready payment gateway integration with invoice generation, payment history, and reconciliation exports.
+- Notifications: Email, SMS, WhatsApp templates, push notifications, and in-app notification center.
+- AI: OpenAI-powered chatbot, smart service suggestions, OCR-assisted document reading, and generated receipt summaries.
+
+## Core Data Model
 
 ```sql
-CREATE TABLE users (
+CREATE TYPE user_role AS ENUM ('ADMIN', 'MANAGER', 'EMPLOYEE', 'CLIENT');
+CREATE TYPE application_status AS ENUM ('SUBMITTED', 'UNDER_REVIEW', 'WAITING_FOR_DOCUMENTS', 'GOVERNMENT_PROCESSING', 'COMPLETED', 'REJECTED');
+CREATE TYPE notification_channel AS ENUM ('IN_APP', 'EMAIL', 'SMS', 'WHATSAPP', 'PUSH');
+
+CREATE TABLE profiles (
   id UUID PRIMARY KEY,
-  name VARCHAR(160) NOT NULL,
-  email VARCHAR(190) UNIQUE NOT NULL,
-  password_hash TEXT NOT NULL,
-  role VARCHAR(40) NOT NULL CHECK (role IN ('SUPER_ADMIN','EMPLOYEE','ACCOUNTANT','CONTENT_MANAGER')),
-  is_active BOOLEAN DEFAULT TRUE,
-  created_at TIMESTAMPTZ DEFAULT NOW()
+  full_name TEXT NOT NULL,
+  email TEXT UNIQUE,
+  phone TEXT,
+  role user_role NOT NULL DEFAULT 'CLIENT',
+  preferred_language TEXT NOT NULL DEFAULT 'ar',
+  created_at TIMESTAMPTZ NOT NULL DEFAULT NOW()
 );
 
 CREATE TABLE services (
   id UUID PRIMARY KEY,
-  title_ar VARCHAR(220) NOT NULL,
+  title_ar TEXT NOT NULL,
+  title_en TEXT NOT NULL,
+  category TEXT NOT NULL,
   description_ar TEXT NOT NULL,
+  description_en TEXT NOT NULL,
   price_bhd NUMERIC(10,3) NOT NULL,
+  processing_time TEXT,
   required_documents JSONB NOT NULL DEFAULT '[]',
-  processing_time VARCHAR(120),
-  status VARCHAR(40) DEFAULT 'VISIBLE',
-  featured_image_url TEXT,
-  created_by UUID REFERENCES users(id),
-  updated_at TIMESTAMPTZ DEFAULT NOW()
+  is_featured BOOLEAN NOT NULL DEFAULT FALSE,
+  is_visible BOOLEAN NOT NULL DEFAULT TRUE,
+  updated_at TIMESTAMPTZ NOT NULL DEFAULT NOW()
 );
 
-CREATE TABLE company_setup_types (
+CREATE TABLE applications (
   id UUID PRIMARY KEY,
-  name_ar VARCHAR(220) NOT NULL,
-  price_bhd NUMERIC(10,3) NOT NULL,
-  government_fees_bhd NUMERIC(10,3) DEFAULT 0,
-  requirements JSONB NOT NULL DEFAULT '[]',
-  documents JSONB NOT NULL DEFAULT '[]',
-  processing_duration VARCHAR(120),
-  notes TEXT,
-  is_visible BOOLEAN DEFAULT TRUE
-);
-
-CREATE TABLE orders (
-  id UUID PRIMARY KEY,
-  order_no VARCHAR(40) UNIQUE NOT NULL,
-  customer_name VARCHAR(180) NOT NULL,
-  company_name VARCHAR(180),
-  phone VARCHAR(40) NOT NULL,
-  email VARCHAR(190),
-  request_type VARCHAR(80) NOT NULL,
+  application_no TEXT UNIQUE NOT NULL,
+  client_id UUID REFERENCES profiles(id),
+  assigned_staff_id UUID REFERENCES profiles(id),
   service_id UUID REFERENCES services(id),
-  request_price NUMERIC(10,3),
-  agreed_amount NUMERIC(10,3),
-  remaining_amount NUMERIC(10,3),
-  payment_status VARCHAR(40) NOT NULL,
-  request_date DATE NOT NULL,
-  deadline DATE,
-  request_status VARCHAR(40) CHECK (request_status IN ('PENDING','PROCESSING','WAITING_CUSTOMER','COMPLETED','CANCELLED')),
-  notes TEXT,
-  assigned_employee_id UUID REFERENCES users(id),
-  source VARCHAR(40) DEFAULT 'WEBSITE',
-  created_at TIMESTAMPTZ DEFAULT NOW()
+  status application_status NOT NULL DEFAULT 'SUBMITTED',
+  progress INTEGER NOT NULL DEFAULT 0 CHECK (progress BETWEEN 0 AND 100),
+  customer_notes TEXT,
+  internal_notes TEXT,
+  government_reference TEXT,
+  submitted_at TIMESTAMPTZ NOT NULL DEFAULT NOW(),
+  due_date DATE
 );
 
-CREATE TABLE attachments (
+CREATE TABLE application_files (
   id UUID PRIMARY KEY,
-  order_id UUID REFERENCES orders(id) ON DELETE CASCADE,
+  application_id UUID REFERENCES applications(id) ON DELETE CASCADE,
   file_url TEXT NOT NULL,
-  file_type VARCHAR(80),
-  uploaded_by UUID REFERENCES users(id),
-  created_at TIMESTAMPTZ DEFAULT NOW()
+  file_name TEXT NOT NULL,
+  file_category TEXT,
+  mime_type TEXT,
+  ocr_text TEXT,
+  uploaded_by UUID REFERENCES profiles(id),
+  created_at TIMESTAMPTZ NOT NULL DEFAULT NOW()
 );
 
 CREATE TABLE payments (
   id UUID PRIMARY KEY,
-  order_id UUID REFERENCES orders(id),
-  amount NUMERIC(10,3) NOT NULL,
-  method VARCHAR(60),
-  paid_at TIMESTAMPTZ DEFAULT NOW(),
-  received_by UUID REFERENCES users(id)
+  application_id UUID REFERENCES applications(id),
+  invoice_no TEXT UNIQUE NOT NULL,
+  amount_bhd NUMERIC(10,3) NOT NULL,
+  gateway_reference TEXT,
+  payment_status TEXT NOT NULL,
+  paid_at TIMESTAMPTZ
+);
+
+CREATE TABLE notifications (
+  id UUID PRIMARY KEY,
+  application_id UUID REFERENCES applications(id),
+  recipient_id UUID REFERENCES profiles(id),
+  channel notification_channel NOT NULL,
+  title TEXT NOT NULL,
+  message TEXT NOT NULL,
+  is_read BOOLEAN NOT NULL DEFAULT FALSE,
+  sent_at TIMESTAMPTZ
 );
 
 CREATE TABLE activity_logs (
   id UUID PRIMARY KEY,
-  actor_id UUID REFERENCES users(id),
-  action VARCHAR(180) NOT NULL,
-  entity_type VARCHAR(80),
-  entity_id UUID,
-  metadata JSONB DEFAULT '{}',
-  created_at TIMESTAMPTZ DEFAULT NOW()
+  actor_id UUID REFERENCES profiles(id),
+  entity_type TEXT NOT NULL,
+  entity_id UUID NOT NULL,
+  action TEXT NOT NULL,
+  metadata JSONB NOT NULL DEFAULT '{}',
+  created_at TIMESTAMPTZ NOT NULL DEFAULT NOW()
 );
 ```
 
-## API Routes
+## Primary API Routes
 
-- `POST /api/auth/login` issues JWT tokens after validating credentials.
-- `GET /api/services` returns visible public services.
-- `POST /api/services` creates a service for Super Admin and Content Manager roles.
-- `PATCH /api/services/:id` updates price, visibility, description, documents, and featured image.
-- `DELETE /api/services/:id` soft-deletes or hides a service.
-- `GET /api/company-setup-types` returns company setup packages.
-- `PATCH /api/company-setup-types/:id` updates prices, requirements, fees, notes, and duration.
-- `POST /api/orders` creates website or manual orders.
-- `GET /api/orders` supports role-aware pagination, search, status filters, employee filters, and date ranges.
-- `PATCH /api/orders/:id` updates status, payments, deadlines, assigned employees, notes, and internal comments.
-- `POST /api/orders/:id/attachments` uploads files to Cloudinary or Firebase Storage.
-- `POST /api/ai/marketing` sends service name, offer details, and target audience to OpenAI.
-- `POST /api/ai/documents` generates an editable Arabic RTL document draft from selected parties and document type.
-- `POST /api/documents/:id/export/pdf` exports a print-ready A4 PDF.
-- `GET /api/reports/revenue` returns revenue and outstanding balances.
-- `GET /api/reports/performance` returns employee performance and completion rates.
-- `POST /api/backups` creates an encrypted backup for Super Admin users.
+- `POST /api/auth/login` authenticates with email, password, and optional OTP challenge.
+- `POST /api/auth/verify-otp` verifies login and sensitive status update actions.
+- `GET /api/services` returns searchable, filterable public service cards.
+- `POST /api/applications` creates an online multi-step application and draft auto-save record.
+- `GET /api/applications/:applicationNo/track` returns status, timeline, notes, missing documents, and notifications.
+- `POST /api/applications/:id/files` uploads and categorizes documents with OCR metadata.
+- `PATCH /api/applications/:id/status` updates progress, writes an activity log, and triggers notifications.
+- `POST /api/payments/checkout` creates a gateway checkout and pending invoice.
+- `GET /api/dashboard/client` returns client widgets, applications, payments, messages, and notifications.
+- `GET /api/dashboard/staff` returns assigned cases, Kanban columns, filters, analytics, and team performance.
+- `POST /api/reports/export` creates PDF or Excel exports for authorized staff.
+- `POST /api/ai/assistant` powers the BASMA chatbot and service recommendations.
 
-## OpenAI Integration Shape
+## Security and Compliance Notes
 
-```ts
-const response = await openai.responses.create({
-  model: 'gpt-4.1-mini',
-  input: [
-    { role: 'system', content: 'You write professional Arabic RTL marketing and government-office documents for Bahrain.' },
-    { role: 'user', content: JSON.stringify({ serviceName, offerDetails, targetAudience }) }
-  ]
-});
-```
+- Enforce row-level security so clients can only access their own applications and files.
+- Store refresh tokens in secure HTTP-only cookies and rotate sessions after privilege-sensitive actions.
+- Validate file type, size, filename, and malware scan result before storage exposure.
+- Keep immutable activity logs for status changes, payment actions, file deletion, exports, and staff assignment.
+- Use signed URLs for private documents and short expiry windows for previews.
+- Apply rate limits to tracking, login, OTP, upload, and chatbot endpoints.
+- Back up the database daily, test monthly restores, and encrypt backup artifacts.
 
-## Security Notes
+## Launch Phases
 
-- Use HTTPS-only cookies for refresh tokens.
-- Store access tokens in memory where possible.
-- Validate all uploaded file types and sizes.
-- Apply RBAC middleware to every dashboard route.
-- Audit service price changes, payment updates, file deletions, and document exports.
-- Run daily encrypted backups and monthly restore drills.
+1. Public website, service catalog, contact flows, and tracking UI.
+2. Authentication, client dashboard, multi-step applications, uploads, and payment history.
+3. Staff dashboard, Kanban assignment, reports, activity logs, and exports.
+4. Notifications through SMS, WhatsApp, email, and push.
+5. AI assistant, OCR document reading, QR receipt verification, and automated reminders.

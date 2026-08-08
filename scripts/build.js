@@ -1,7 +1,7 @@
 import { mkdirSync, copyFileSync, rmSync } from 'node:fs';
 import { dirname } from 'node:path';
 
-const files = ['index.html', 'src/styles.css', 'src/app.js', 'manifest.webmanifest', 'sw.js'];
+const files = ['index.html', 'src/styles.css', 'src/app.js', 'manifest.webmanifest', 'sw.js', 'icons/icon.svg'];
 rmSync('dist', { recursive: true, force: true });
 for (const file of files) {
   const target = `dist/${file}`;

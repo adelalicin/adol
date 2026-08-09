@@ -1,99 +1,89 @@
-const brand = {
-  nameAr: 'بصمة لتخليص المعاملات',
-  nameEn: 'Basma Pro Services',
-  slogan: 'ننجزها... ببصمة ثقة',
-};
-
-const services = [
-  ['💡', 'الكهرباء والماء', 'طلبات التوصيل، تحديث البيانات، متابعة الفواتير، وإنهاء الإجراءات لدى الجهات المختصة.'],
-  ['🪪', 'خدمات LMRA', 'إصدار وتجديد تصاريح العمل، مواعيد البصمة، متابعة الطلبات، وتحضير المستندات.'],
-  ['🛂', 'معاملات التأشيرات', 'تقديم التأشيرات، الإقامات، الزيارات، التمديد، وتجهيز الملفات المطلوبة بسرعة.'],
-  ['🏛️', 'السجل التجاري والخدمات الحكومية', 'السجلات التجارية، التراخيص، التصديقات، والطلبات الحكومية للشركات والأفراد.'],
-];
-
-const values = [
-  ['⚡', 'سرعة الإنجاز', 'مسارات عمل واضحة ومتابعة يومية لتقليل زمن الانتظار.'],
-  ['🛡️', 'ثقة ومصداقية', 'تعامل آمن مع الوثائق وشفافية كاملة في مراحل الطلب.'],
-  ['🎯', 'دقة في التفاصيل', 'مراجعة متعددة للطلبات قبل رفعها لتقليل الملاحظات والرفض.'],
-];
-
-const requests = [
-  { id: 'BPS-24051', client: 'أحمد النور', service: 'تجديد إقامة', employee: 'سارة علي', status: 'قيد التنفيذ', progress: 68, due: 'اليوم', docs: 4, notes: 'تم رفع صورة الجواز والبطاقة الذكية.' },
-  { id: 'BPS-24052', client: 'شركة الخليج للتجارة', service: 'سجل تجاري', employee: 'محمد حسن', status: 'بانتظار المراجعة', progress: 35, due: 'غداً', docs: 7, notes: 'بانتظار تفويض المدير.' },
-  { id: 'BPS-24053', client: 'مريم يوسف', service: 'كهرباء وماء', employee: 'نور فهد', status: 'مكتمل', progress: 100, due: 'منجز', docs: 3, notes: 'تم تسليم رقم الحساب للعميل.' },
-  { id: 'BPS-24054', client: 'مطعم اللؤلؤ', service: 'LMRA تصريح عمل', employee: 'سارة علي', status: 'قيد التنفيذ', progress: 52, due: 'بعد يومين', docs: 6, notes: 'تم تحديد موعد البصمة.' },
-];
-
-const employees = [
-  ['سارة علي', 'موظفة معاملات', 12, 91, 'س'],
-  ['محمد حسن', 'مشرف عمليات', 9, 88, 'م'],
-  ['نور فهد', 'خدمة عملاء', 15, 95, 'ن'],
-];
-
-const logo = () => `<a class="logo" href="#home" aria-label="Basma Pro Services"><span class="fingerprint" aria-hidden="true"><span>✓</span></span><span><strong>${brand.nameAr}</strong><small>${brand.nameEn}</small></span></a>`;
-const bassam = (compact = false) => `<div class="bassam ${compact ? 'bassam-compact' : ''}" aria-label="Bassam mascot"><div class="hair"></div><div class="face"><span class="eye e1"></span><span class="eye e2"></span><span class="smile"></span></div><div class="suit"><span class="tie"></span><span class="badge">✓</span></div><div class="thumb">👍</div></div>`;
-const pill = status => `<span class="pill ${status === 'مكتمل' ? 'done' : ''}">${status}</span>`;
-const progress = amount => `<div class="progress"><i style="width:${amount}%"></i></div>`;
-
-function render() {
-  document.getElementById('app').innerHTML = `
-  <div class="app">
-    <header class="site-header"><div class="container nav-wrap">${logo()}<button class="menu-toggle" aria-label="فتح القائمة">☰</button><nav>${[['الرئيسية','home'],['الخدمات','services'],['عن بصمة','about'],['تتبع طلبك','track'],['لوحة التحكم','dashboard'],['تواصل معنا','contact']].map(([l,id]) => `<a href="#${id}">${l}</a>`).join('')}</nav><button class="mode">🌙 الوضع</button></div></header>
-    <section id="home" class="hero section-pad"><div class="container hero-grid"><div class="hero-copy reveal"><span class="eyebrow">منصة تخليص معاملات حكومية احترافية</span><h1>${brand.slogan}</h1><p>نحوّل إجراءات العملاء الحكومية إلى رحلة رقمية واضحة: رقم تتبع، تحديثات فورية، فريق متخصص، وإدارة داخلية دقيقة للموظفين والمهام.</p><div class="hero-actions"><a class="btn primary" href="#track">ابدأ طلبك الآن</a><a class="btn ghost" href="#dashboard">استكشف النظام</a></div><div class="trust-row"><span>متابعة لحظية</span><span>ملفات آمنة</span><span>تقارير أداء</span></div></div><div class="hero-card reveal delay">${bassam()}<div class="stamp">تم الإنجاز</div><div class="mini-card"><b>BPS-24051</b><span>تجديد إقامة • قيد التنفيذ</span><div><i style="width:68%"></i></div></div></div></div></section>
-    <section id="services" class="section-pad"><div class="container"><div class="section-head"><span class="eyebrow">خدماتنا الحكومية</span><h2>كل معاملة لها مسار واضح وفريق مسؤول</h2><p>حلول تخليص معاملات للأفراد والشركات، مع قوائم مستندات ومواعيد ومتابعة دقيقة من البداية حتى الاعتماد.</p></div><div class="cards services-grid">${services.map(([icon,title,text]) => `<article class="service-card"><span class="service-icon">${icon}</span><h3>${title}</h3><p>${text}</p><a href="#contact">اطلب الخدمة ←</a></article>`).join('')}</div></div></section>
-    <section class="why section-pad compact-pad"><div class="container why-grid">${values.map(([icon,title,text]) => `<div class="value-card"><span>${icon}</span><h3>${title}</h3><p>${text}</p></div>`).join('')}</div></section>
-    <section id="about" class="about section-pad"><div class="container about-grid"><div><span class="eyebrow">قصتنا</span><h2>بصمة برو: شريك موثوق لإنجاز معاملاتك</h2><p>رسالتنا هي تبسيط الإجراءات الحكومية عبر منصة تجمع بين الخبرة التشغيلية والشفافية الرقمية. نؤمن أن العميل يستحق معرفة حالة طلبه في كل لحظة، وأن الموظف يحتاج أدوات واضحة لإنجاز المهام بدقة.</p><p>يمثل “بسّام” شخصية العلامة: مساعد محترف، سريع، ودود، يرافق العميل في كل خطوة ويذكر الفريق بأهمية الثقة والدقة.</p></div><div class="mascot-panel">${bassam(true)}<h3>مرحباً، أنا بسّام</h3><p>سأساعدك في تجهيز المستندات وتتبع طلبك حتى تظهر علامة الإنجاز.</p></div></div></section>
-    <section class="testimonials section-pad compact-pad"><div class="container"><div class="section-head"><span class="eyebrow">آراء العملاء</span><h2>تجربة خدمة راقية وواضحة</h2></div><div class="testimonial-grid">${['تحديثات الطلب على واتساب اختصرت علينا الكثير من الاتصالات.','فريق بصمة راجع المستندات بدقة وأنجز المعاملة قبل الموعد.','لوحة التتبع أعطتنا وضوحاً ممتازاً لحالة طلب الشركة.'].map((t,i) => `<blockquote>“${t}”<cite>${['أحمد النور','مريم يوسف','شركة الخليج'][i]}</cite></blockquote>`).join('')}</div></div></section>
-    <section id="track" class="track section-pad"><div class="container track-grid"><div><span class="eyebrow">تتبع طلب العميل</span><h2>أدخل رقم التتبع لمعرفة آخر تحديث</h2><p>كل عميل يحصل على رقم تتبع خاص لمتابعة مراحل المعاملة والملاحظات والوثائق المطلوبة.</p><div class="track-form"><input id="trackingInput" value="BPS-24051" placeholder="مثال: BPS-24051" dir="ltr"/><button class="btn primary" id="trackingButton">تحقق</button></div></div><div class="status-card" id="trackingResult"></div></div></section>
-    <section id="dashboard" class="dashboard section-pad"><div class="container"><div class="dash-shell"><aside>${logo()}<button class="dash-tab active" data-tab="admin">لوحة المدير</button><button class="dash-tab" data-tab="employee">لوحة الموظف</button><button class="dash-tab" data-tab="reports">التقارير والتنبيهات</button><div class="secure-box">🔐 دخول آمن<br/><small>JWT / Firebase Auth ready</small></div></aside><main><div class="dash-head"><div><span class="eyebrow">نظام داخلي</span><h2 id="dashTitle">إدارة الموظفين والمعاملات</h2></div><button class="btn primary">+ معاملة جديدة</button></div><div id="dashContent"></div></main></div></div></section>
-    <section id="contact" class="contact section-pad"><div class="container contact-grid"><div><span class="eyebrow">تواصل معنا</span><h2>جاهزون لإنجاز معاملتك القادمة</h2><p>راسلنا على واتساب أو املأ النموذج وسيقوم فريق خدمة العملاء بالتواصل معك وتجهيز قائمة المستندات المطلوبة.</p><div class="contact-actions"><a class="btn whatsapp" href="https://wa.me/97366000000" target="_blank">واتساب مباشر</a><a class="btn ghost" href="mailto:info@basmapro.sa">info@basmapro.sa</a></div><div class="map">📍 موقع المكتب - Bahrain / GCC<br/><small>Map integration ready</small></div></div><form class="contact-form"><input placeholder="الاسم الكامل"/><input placeholder="رقم الهاتف"/><select><option>اختر نوع الخدمة</option>${services.map(s => `<option>${s[1]}</option>`).join('')}</select><textarea placeholder="اكتب تفاصيل الطلب"></textarea><button class="btn primary" type="button">إرسال الطلب</button></form></div></section>
-    <a class="float-wa" href="https://wa.me/97366000000" target="_blank" aria-label="WhatsApp">💬</a><footer><div class="container">${logo()}<p>© 2026 Basma Pro Services. ننجزها... ببصمة ثقة.</p></div></footer>
-  </div>`;
-}
-
-function renderTracking() {
-  const code = document.getElementById('trackingInput').value.trim().toLowerCase();
-  const r = requests.find(item => item.id.toLowerCase() === code);
-  document.getElementById('trackingResult').innerHTML = r ? `<div class="status-top"><b>${r.id}</b>${pill(r.status)}</div><h3>${r.service}</h3><p>العميل: ${r.client}</p>${progress(r.progress)}<small>${r.progress}% مكتمل • المسؤول: ${r.employee}</small><p class="note">${r.notes}</p>` : '<p>لم يتم العثور على طلب بهذا الرقم.</p>';
-}
-
-function requestTable() {
-  return `<div class="table-wrap"><table><thead><tr><th>رقم الطلب</th><th>العميل</th><th>الخدمة</th><th>الموظف</th><th>الحالة</th><th>التقدم</th></tr></thead><tbody>${requests.map(r => `<tr><td dir="ltr">${r.id}</td><td>${r.client}</td><td>${r.service}</td><td>${r.employee}</td><td>${pill(r.status)}</td><td><div class="progress small"><i style="width:${r.progress}%"></i></div></td></tr>`).join('')}</tbody></table></div>`;
-}
-
-function renderDashboard(tab = 'admin') {
-  const stats = { total: requests.length, completed: requests.filter(r => r.status === 'مكتمل').length, progress: requests.filter(r => r.status === 'قيد التنفيذ').length, docs: requests.reduce((sum, r) => sum + r.docs, 0) };
-  const title = tab === 'admin' ? 'إدارة الموظفين والمعاملات' : tab === 'employee' ? 'مهامي اليوم' : 'تحليلات الأداء';
-  document.getElementById('dashTitle').textContent = title;
-  const admin = `<div class="stat-grid">${[['إجمالي الطلبات',stats.total],['قيد التنفيذ',stats.progress],['مكتملة',stats.completed],['وثائق مرفوعة',stats.docs]].map(([l,v]) => `<div class="stat"><span>${l}</span><b>${v}</b></div>`).join('')}</div><div class="panel-grid"><div class="panel wide"><h3>متابعة المعاملات</h3>${requestTable()}</div><div class="panel"><h3>الموظفون</h3>${employees.map(([name,role,tasks,completion,avatar]) => `<div class="employee"><span class="avatar">${avatar}</span><div><b>${name}</b><small>${role} • ${tasks} مهام</small></div><em>${completion}%</em></div>`).join('')}<div class="upload-box">⬆️ رفع المستندات<br/><small>PDF, PNG, JPG</small></div></div></div>`;
-  const employee = `<div class="panel wide"><h3>المهام المسندة</h3>${requests.filter(r => r.status !== 'مكتمل').map(r => `<div class="task"><div><b>${r.service}</b><small>${r.id} • ${r.client} • استحقاق: ${r.due}</small><p>${r.notes}</p></div><button class="btn ghost update-task" data-id="${r.id}">تحديث الحالة</button></div>`).join('')}<div class="comment-box"><textarea placeholder="أضف ملاحظة داخلية للطلب..."></textarea><button class="btn primary">حفظ الملاحظة</button></div></div>`;
-  const reports = `<div class="panel-grid"><div class="panel wide"><h3>الأداء الشهري</h3><div class="chart">${[74,92,58,88,66,96,81].map(h => `<span style="height:${h}%"><b>${h}</b></span>`).join('')}</div></div><div class="panel"><h3>التنبيهات</h3><ul class="alerts"><li>🔔 طلب BPS-24052 يحتاج تفويضاً.</li><li>📄 14 وثيقة تم رفعها هذا الأسبوع.</li><li>✅ نسبة إنجاز اليوم ${Math.round((stats.completed / stats.total) * 100)}%.</li></ul></div></div>`;
-  document.getElementById('dashContent').innerHTML = { admin, employee, reports }[tab];
-}
-
-render();
-renderTracking();
-renderDashboard();
-
-document.querySelector('.menu-toggle').addEventListener('click', () => document.querySelector('nav').classList.toggle('open'));
-document.querySelectorAll('nav a').forEach(link => link.addEventListener('click', () => document.querySelector('nav').classList.remove('open')));
-document.querySelector('.mode').addEventListener('click', event => {
-  document.querySelector('.app').classList.toggle('dark');
-  event.currentTarget.textContent = document.querySelector('.app').classList.contains('dark') ? '☀️ الوضع' : '🌙 الوضع';
-});
-document.getElementById('trackingButton').addEventListener('click', renderTracking);
-document.getElementById('trackingInput').addEventListener('keydown', event => { if (event.key === 'Enter') renderTracking(); });
-document.querySelectorAll('.dash-tab').forEach(button => button.addEventListener('click', () => {
-  document.querySelectorAll('.dash-tab').forEach(tab => tab.classList.remove('active'));
-  button.classList.add('active');
-  renderDashboard(button.dataset.tab);
-}));
-document.addEventListener('click', event => {
-  if (!event.target.matches('.update-task')) return;
-  const request = requests.find(r => r.id === event.target.dataset.id);
-  if (request) {
-    request.status = 'قيد التنفيذ';
-    request.progress = Math.min(100, request.progress + 15);
-    renderDashboard('employee');
+const I={upload:'<svg viewBox="0 0 24 24"><path d="M12 16V4m0 0L7 9m5-5 5 5M5 15v5h14v-5"/></svg>',car:'<svg viewBox="0 0 24 24"><path d="M5 17h14M6 17v2m12-2v2M4 13l2-6h12l2 6v4H4z"/></svg>',file:'<svg viewBox="0 0 24 24"><path d="M6 2h8l4 4v16H6zM14 2v5h5"/></svg>',lock:'<svg viewBox="0 0 24 24"><rect x="5" y="10" width="14" height="10" rx="2"/><path d="M8 10V7a4 4 0 018 0v3"/></svg>',history:'<svg viewBox="0 0 24 24"><path d="M4 12a8 8 0 108-8 8 8 0 00-7 4M4 4v5h5"/></svg>',trash:'<svg viewBox="0 0 24 24"><path d="M4 7h16M9 7V4h6v3m3 0l-1 14H7L6 7"/></svg>'};
+const icon=n=>`<span class="icon">${I[n]||I.file}</span>`;
+const labels=['المستندات','الاستخراج','مراجعة البيانات','خيارات إضافية','المعاينة','التوقيع','PDF'];
+const requiredDocs=[['buyerFront','هوية المشتري','الوجه الأمامي'],['buyerBack','هوية المشتري','الوجه الخلفي'],['sellerFront','هوية البائع','الوجه الأمامي'],['sellerBack','هوية البائع','الوجه الخلفي'],['vehicleReg','ملكية المركبة','شهادة التسجيل'],['insuranceDoc','شهادة التأمين','بطاقة أو وثيقة']];
+const f=(value='',sourceDocument='',confidence=.99)=>({value,sourceDocument,confidence,verifiedByUser:false});
+const seed=()=>({id:crypto.randomUUID?.()||Date.now().toString(),createdAt:new Date().toISOString(),step:0,status:'draft',seller:{nameAr:f('علي حسن محمد','sellerFront',.98),nameEn:f('ALI HASAN MOHAMED','sellerFront',.97),idType:f('CPR','sellerFront',.99),idNumber:f('850101123','sellerFront',.94),nationality:f('بحريني','sellerFront',.96),gender:f('ذكر','sellerFront',.96),address:f('المنامة، مملكة البحرين','sellerBack',.78)},buyer:{nameAr:f('فاطمة أحمد يوسف','buyerFront',.98),nameEn:f('FATIMA AHMED YOUSIF','buyerFront',.96),cpr:f('920202456','buyerFront',.91),nationality:f('بحرينية','buyerFront',.97),gender:f('أنثى','buyerFront',.98),phone:f('','',0),address:f('المحرق، مملكة البحرين','buyerBack',.74)},vehicle:{plateNumber:f('582914','vehicleReg',.99),plateType:f('خصوصي','vehicleReg',.97),make:f('Toyota','vehicleReg',.98),model:f('Camry','vehicleReg',.98),color:f('أبيض','vehicleReg',.96),year:f('2022','vehicleReg',.99),country:f('اليابان','vehicleReg',.94),chassis:f('JTNB11HK8N3012345','vehicleReg',.93),engine:f('A25A123456','vehicleReg',.86),cc:f('2500','vehicleReg',.96),cylinders:f('4','vehicleReg',.97),seats:f('5','vehicleReg',.98),fuel:f('بنزين','vehicleReg',.97),steering:f('يسار','vehicleReg',.98),weight:f('1570 kg','vehicleReg',.82)},insurance:{company:f('شركة البحرين الوطنية للتأمين','insuranceDoc',.96),policyNumber:f('BNI-2026-44821','insuranceDoc',.92),startDate:f('2026-01-15','insuranceDoc',.96),endDate:f('2027-01-14','insuranceDoc',.96)},sale:{enabled:false,price:'',payment:'cash',date:new Date().toISOString().slice(0,10),condition:'بحالة جيدة',notes:''},documents:{},accidentReport:{enabled:false,fileName:'',governmentUrl:'https://www.bahrain.bh/'},signatures:{seller:'',buyer:''},autoDeleteDays:30});
+let tx=load()||seed(), view='new', cameraStream=null, cameraTarget=null, cameraFacing='environment';
+function load(){try{return JSON.parse(localStorage.getItem('naql-current'))}catch{return null}}
+function save(){localStorage.setItem('naql-current',JSON.stringify({...tx,documents:Object.fromEntries(Object.entries(tx.documents).map(([k,v])=>[k,{...v,data:''}]))})); toast('تم الحفظ تلقائيًا')}
+function shell(){document.querySelector('#app').innerHTML=`<div class="layout"><aside class="sidebar"><div class="brand">${icon('car')}<span><b>نَقْل</b><small>Vehicle Transfer Assistant</small></span></div><nav><button class="nav-item active" data-view="new">＋ معاملة جديدة</button><button class="nav-item" data-view="history">${icon('history')} المعاملات</button></nav><div class="secure-note">${icon('lock')}<span><b>مساحة خاصة ومشفرة</b><small>لا إرسال حكومي تلقائيًا</small></span></div></aside><main class="main"><header><button id="menu">☰</button><b class="mobile-logo">نَقْل</b><div><button id="language">EN</button><button>مركز المساعدة</button></div></header><div id="content"></div></main></div><div class="camera-modal" id="cameraModal" hidden><div class="camera-shell"><div class="camera-head"><div><b>تصوير المستند</b><small>ضع المستند كاملًا داخل الإطار</small></div><button id="closeCamera" aria-label="إغلاق">×</button></div><div class="camera-view"><video id="cameraVideo" autoplay playsinline muted></video><div class="document-guide"><i></i><i></i><i></i><i></i></div><span class="camera-hint">تأكد من وضوح النص وتجنب انعكاس الضوء</span></div><canvas id="cameraCanvas" hidden></canvas><div class="camera-actions"><button id="flipCamera" class="secondary">↻ تبديل الكاميرا</button><button id="takePhoto" class="shutter" aria-label="التقاط الصورة"><i></i></button><span>التقاط</span></div></div></div>`;document.querySelector('[data-view="new"]').onclick=()=>createNewTransaction();document.querySelector('[data-view="history"]').onclick=()=>{view='history';setActiveNavigation('history');document.querySelector('.sidebar').classList.remove('open');render()};document.querySelector('#menu').onclick=()=>document.querySelector('.sidebar').classList.toggle('open');document.querySelector('#language').onclick=()=>{document.documentElement.dir=document.documentElement.dir==='rtl'?'ltr':'rtl';toast('تم تبديل اتجاه الواجهة / Interface direction changed')};document.querySelector('#closeCamera').onclick=closeCamera;document.querySelector('#takePhoto').onclick=capturePhoto;document.querySelector('#flipCamera').onclick=()=>{cameraFacing=cameraFacing==='environment'?'user':'environment';startCamera(cameraTarget)};render()}
+function setActiveNavigation(name){document.querySelectorAll('[data-view]').forEach(button=>button.classList.toggle('active',button.dataset.view===name))}
+function createNewTransaction(){
+  if(tx.step>0||Object.keys(tx.documents).length){
+    const history=JSON.parse(localStorage.getItem('naql-history')||'[]');
+    if(!history.some(item=>item.id===tx.id))history.unshift(tx);
+    localStorage.setItem('naql-history',JSON.stringify(history));
   }
-});
+  tx=seed();
+  view='new';
+  localStorage.setItem('naql-current',JSON.stringify(tx));
+  setActiveNavigation('new');
+  document.querySelector('.sidebar').classList.remove('open');
+  render();
+  toast('تم إنشاء معاملة جديدة');
+}
+async function startCamera(documentId){
+  cameraTarget=documentId;
+  closeCamera(false);
+  if(!navigator.mediaDevices?.getUserMedia){
+    toast('الكاميرا المباشرة غير مدعومة؛ اختر صورة من الجهاز');
+    document.querySelector(`[data-doc="${documentId}"]`)?.click();
+    return;
+  }
+  const modal=document.querySelector('#cameraModal');
+  modal.hidden=false;
+  document.body.classList.add('camera-open');
+  try{
+    cameraStream=await navigator.mediaDevices.getUserMedia({video:{facingMode:{ideal:cameraFacing},width:{ideal:1920},height:{ideal:1080}},audio:false});
+    const video=document.querySelector('#cameraVideo');
+    video.srcObject=cameraStream;
+    await video.play();
+  }catch(error){
+    closeCamera();
+    const denied=error.name==='NotAllowedError'||error.name==='PermissionDeniedError';
+    toast(denied?'اسمح للتطبيق باستخدام الكاميرا من إعدادات المتصفح':'تعذر تشغيل الكاميرا؛ يمكنك رفع صورة بدلًا منها');
+  }
+}
+function closeCamera(hide=true){
+  cameraStream?.getTracks().forEach(track=>track.stop());
+  cameraStream=null;
+  const video=document.querySelector('#cameraVideo');
+  if(video)video.srcObject=null;
+  if(hide){document.querySelector('#cameraModal').hidden=true;document.body.classList.remove('camera-open')}
+}
+function capturePhoto(){
+  const video=document.querySelector('#cameraVideo'),canvas=document.querySelector('#cameraCanvas');
+  if(!cameraStream||!video.videoWidth)return toast('انتظر حتى تصبح الكاميرا جاهزة');
+  canvas.width=video.videoWidth;canvas.height=video.videoHeight;
+  canvas.getContext('2d').drawImage(video,0,0,canvas.width,canvas.height);
+  canvas.toBlob(blob=>{
+    if(!blob)return toast('تعذر حفظ الصورة، حاول مرة أخرى');
+    const name=`${cameraTarget}-${Date.now()}.jpg`;
+    tx.documents[cameraTarget]={name,type:'image/jpeg',size:blob.size,data:URL.createObjectURL(blob),capturedWithCamera:true};
+    closeCamera();save();render();toast('تم التقاط المستند بالكاميرا بنجاح');
+  },'image/jpeg',.92);
+}
+function progress(){return `<div class="wizard">${labels.map((x,i)=>`<button class="${i===tx.step?'active':''} ${i<tx.step?'done':''}" data-goto="${i}" ${i>tx.step?'disabled':''}><span>${i<tx.step?'✓':i+1}</span><small>${x}</small></button>`).join('')}</div>`}
+function page(inner){return `<section class="page"><div class="page-top"><div><span class="eyebrow">معاملة رقم ${tx.vehicle.plateNumber.value||'جديدة'}</span><h1>${labels[tx.step]}</h1></div><span class="autosave">● محفوظ تلقائيًا</span></div>${progress()}${inner}</section>`}
+function render(){if(view==='history')return renderHistory();const screens=[documentsScreen,extractScreen,reviewScreen,optionsScreen,previewScreen,signatureScreen,pdfScreen];document.querySelector('#content').innerHTML=page(screens[tx.step]());bindCommon();(binders[tx.step]||(()=>{}))()}
+function documentsScreen(){const count=Object.keys(tx.documents).filter(k=>tx.documents[k]?.name).length;return `<div class="privacy">${icon('lock')}<div><b>خصوصيتك أولويتنا</b><p>لن نعتمد أي بيانات حساسة دون مراجعتك. الملفات محمية وغير متاحة عبر روابط عامة.</p></div></div><div class="section-head"><div><h2>صوّر أو ارفع المستندات المطلوبة</h2><p>${count} من 6 مستندات مرفوعة</p></div><b>${Math.round(count/6*100)}%</b></div><div class="meter"><i style="width:${count/6*100}%"></i></div><div class="documents">${requiredDocs.map(([id,title,sub])=>docCard(id,title,sub)).join('')}</div><label class="extra-upload">＋ إضافة مرفق آخر<input type="file" hidden></label>${footer('بدء استخراج البيانات',count===6)}`}
+function docCard(id,title,sub){const d=tx.documents[id];return `<article class="document ${d?'ready':''}"><div class="doc-icon">${icon('file')}</div><div><h3>${title}</h3><p>${sub}</p><small>${d?`✓ ${d.name} • جاهز للتحليل`:'JPG, PNG أو PDF • حتى 10 MB'}</small></div>${d?`<button class="replace" data-id="${id}">استبدال</button>`:''}<div class="capture"><button type="button" class="camera-button" data-camera="${id}">◉ ${d?'إعادة التصوير':'التقاط بالكاميرا'}</button><label class="gallery-button">رفع ملف<input data-doc="${id}" type="file" accept="image/*,application/pdf" hidden></label></div></article>`}
+function extractScreen(){return `<div class="processing-card"><div class="scanner">${icon('file')}<i></i></div><h2 id="processTitle">نحلل مستنداتك بأمان…</h2><p>اكتشاف النوع ← قص الحواف وتصحيح المنظور ← تحسين النص ← OCR ← فهم الحقول بالذكاء الاصطناعي</p><div class="process-list">${['التحقق من جودة الصور','قراءة هويات البائع والمشتري','استخراج بيانات المركبة والتأمين','مطابقة الحقول وتجهيز المراجعة'].map((x,i)=>`<div class="process" data-process="${i}"><span>${i+1}</span><b>${x}</b><small>بانتظار البدء</small></div>`).join('')}</div><button class="primary" id="startOcr">بدء التحليل الذكي</button></div>`}
+const sections={buyer:['بيانات المشتري',{nameAr:'الاسم بالعربية',nameEn:'الاسم بالإنجليزية',cpr:'الرقم الشخصي CPR',nationality:'الجنسية',gender:'الجنس',phone:'رقم الهاتف',address:'العنوان'}],seller:['بيانات البائع',{nameAr:'الاسم بالعربية',nameEn:'الاسم بالإنجليزية',idType:'نوع الهوية',idNumber:'CPR / CR',nationality:'الجنسية',gender:'الجنس',address:'العنوان'}],vehicle:['بيانات المركبة',{plateNumber:'رقم المركبة',plateType:'نوع اللوحة',make:'الشركة المصنعة',model:'الطراز',color:'اللون',year:'سنة الصنع',country:'بلد الصنع',chassis:'رقم الهيكل',engine:'رقم المحرك',cc:'السعة CC',cylinders:'الأسطوانات',seats:'المقاعد',fuel:'الوقود',steering:'جهة المقود',weight:'الوزن'}],insurance:['بيانات التأمين',{company:'شركة التأمين',policyNumber:'رقم الوثيقة',startDate:'تاريخ البداية',endDate:'تاريخ النهاية'}]};
+function reviewScreen(){return `<div class="review-alert">راجع الحقول المحددة باللون البرتقالي — دقة الاستخراج أقل من 85%.</div>${Object.entries(sections).map(([key,[title,fields]])=>`<details class="form-section" open><summary><h2>${title}</h2><span>${Object.keys(fields).length} حقول</span></summary><div class="field-grid">${Object.entries(fields).map(([name,label])=>field(key,name,label)).join('')}</div></details>`).join('')}${footer('اعتماد البيانات والمتابعة',true)}`}
+function field(group,name,label){const x=tx[group][name]||f();const low=x.confidence<.85;return `<label class="field ${low?'low':''}"><span>${label} ${low?'<em>راجع الحقل</em>':''}</span><input data-group="${group}" data-field="${name}" value="${esc(x.value)}"><small>دقة ${Math.round(x.confidence*100)}% • ${x.sourceDocument||'إدخال يدوي'}</small></label>`}
+function optionsScreen(){return `<div class="option-grid"><article class="option"><div class="option-title"><div>${icon('file')}<span><h2>إنشاء عقد بيع</h2><p>عقد ثنائي اللغة عربي / إنجليزي</p></span></div><label class="switch"><input id="saleEnabled" type="checkbox" ${tx.sale.enabled?'checked':''}><i></i></label></div><div class="option-body ${tx.sale.enabled?'':'hidden'}" id="saleFields"><label>قيمة البيع (د.ب)<input id="price" type="number" value="${tx.sale.price}" placeholder="0.000"></label><label>طريقة الدفع<select id="payment"><option value="cash">نقدًا</option><option value="bank">تحويل بنكي</option><option value="other">أخرى</option></select></label><label>تاريخ البيع<input id="saleDate" type="date" value="${tx.sale.date}"></label><label>حالة المركبة<input id="condition" value="${tx.sale.condition}"></label><label class="wide">ملاحظات<textarea id="notes">${tx.sale.notes}</textarea></label></div></article><article class="option"><div class="option-title"><div>${icon('car')}<span><h2>تقرير حوادث المركبة</h2><p>الاستعلام عبر بوابة الحكومة الرسمية</p></span></div><label class="switch"><input id="accidentEnabled" type="checkbox" ${tx.accidentReport.enabled?'checked':''}><i></i></label></div><div class="option-body ${tx.accidentReport.enabled?'':'hidden'}" id="accidentFields"><div class="gov-note"><b>رقم المركبة: ${tx.vehicle.plateNumber.value}</b><p>لن نتجاوز تسجيل الدخول أو CAPTCHA. أكمل الطلب بنفسك في الموقع الرسمي ثم ارفع التقرير.</p><a href="${tx.accidentReport.governmentUrl}" target="_blank" rel="noopener">فتح بوابة حكومة البحرين ↗</a></div><label class="wide upload-report">رفع التقرير بعد تنزيله<input id="accidentFile" type="file" accept="application/pdf,image/*"><small>${tx.accidentReport.fileName||'PDF أو صورة'}</small></label></div></article><article class="option retention"><div><h2>الحذف التلقائي للصور الأصلية</h2><p>يمكن حذف صور الهويات نهائيًا بعد مدة محددة.</p></div><select id="retention"><option value="30">بعد 30 يومًا</option><option value="7">بعد 7 أيام</option><option value="0">لا تحذف تلقائيًا</option></select></article></div>${footer('المتابعة إلى المعاينة',true)}`}
+function previewScreen(){return `<div class="preview-toolbar"><b>معاينة مستندات المعاملة</b><span>يُرجى التحقق قبل التوقيع</span></div><div class="paper"><div class="paper-head"><b>مملكة البحرين</b><span>الإدارة العامة للمرور</span><h2>استمارة تحويل ملكية مركبة</h2><em>TRANSFER OF OWNERSHIP ✓</em></div><div class="paper-grid"><section><h3>بيانات المشتري / BUYER'S DETAILS</h3><p>${tx.buyer.nameAr.value}</p><p>${tx.buyer.cpr.value} • ${tx.buyer.nationality.value}</p></section><section><h3>بيانات المالك / VEHICLE OWNER'S DETAILS</h3><p>${tx.seller.nameAr.value}</p><p>${tx.seller.idNumber.value} • ${tx.seller.nationality.value}</p></section><section class="wide"><h3>بيانات المركبة / VEHICLE DETAILS</h3><p>${tx.vehicle.make.value} ${tx.vehicle.model.value} — ${tx.vehicle.year.value} — ${tx.vehicle.color.value}</p><p>Plate: ${tx.vehicle.plateNumber.value} • Chassis: ${tx.vehicle.chassis.value}</p></section><section class="wide"><h3>بيانات التأمين / INSURANCE DETAILS</h3><p>${tx.insurance.company.value} • ${tx.insurance.policyNumber.value}</p></section></div><small class="template-note">محاكاة معاينة: في الربط الإنتاجي يُكتب النص فوق قالب PDF الرسمي دون تعديل خلفيته.</small></div>${tx.sale.enabled?saleContract():''}${footer('اعتماد المعاينة والمتابعة',true)}`}
+function saleContract(){return `<div class="paper contract"><div class="paper-head"><h2>عقد بيع مركبة<br><small>VEHICLE SALE AGREEMENT</small></h2></div><p>أقر البائع <b>${tx.seller.nameAr.value}</b> ببيع المركبة رقم <b>${tx.vehicle.plateNumber.value}</b>، رقم الهيكل <b>${tx.vehicle.chassis.value}</b>، إلى المشتري <b>${tx.buyer.nameAr.value}</b> بقيمة <b>${tx.sale.price||'—'} د.ب</b>.</p><p>يقر البائع باستلام المبلغ، ويقر المشتري باستلام المركبة بحالتها الموضحة. يتحمل البائع المخالفات السابقة لتاريخ ${tx.sale.date} والمشتري ما بعده.</p><div class="contract-sign"><span>توقيع البائع</span><span>توقيع المشتري</span></div></div>`}
+function signatureScreen(){return `<div class="signature-intro"><h2>وقّع بالإصبع أو اترك الخانات فارغة</h2><p>لن يُضاف أي توقيع دون موافقتك الصريحة.</p><label><input type="checkbox" id="blankSign"> سأطبع الملف وأوقّعه يدويًا</label></div><div class="signature-grid"><div><h3>توقيع البائع</h3><canvas id="sellerCanvas"></canvas><button data-clear="seller">مسح التوقيع</button></div><div><h3>توقيع المشتري</h3><canvas id="buyerCanvas"></canvas><button data-clear="buyer">مسح التوقيع</button></div></div><label class="consent"><input type="checkbox" id="consent"> أوافق على إدراج التوقيعات المرسومة في المستند النهائي.</label>${footer('تأكيد وإنشاء ملف PDF',true)}`}
+function pdfScreen(){const filename=`Vehicle-Transfer_${tx.vehicle.plateNumber.value}_${new Date().toISOString().slice(0,10)}.pdf`;return `<div class="success"><span>✓</span><h2>ملف المعاملة جاهز</h2><p>تم ترتيب الغلاف، الاستمارة، العقد، تقرير الحوادث، الهويات، ملكية المركبة والتأمين.</p><div class="file-ready">${icon('file')}<div><b>${filename}</b><small>ملف PDF آمن • جاهز للطباعة</small></div></div><button class="primary" id="downloadPdf">تنزيل / طباعة PDF</button><button class="secondary" id="newTx">بدء معاملة جديدة</button><div class="disclaimer"><b>تنبيه مهم</b><p>هذا الملف أُعد للمساعدة فقط. التطبيق ليس بديلًا عن الخدمات الرسمية ولا يرسل المعاملة إلى أي جهة حكومية.</p></div></div>`}
+function footer(text,enabled){return `<div class="actions"><button class="secondary" id="back" ${tx.step===0?'disabled':''}>السابق</button><button class="primary" id="next" ${enabled?'':'disabled'}>${text} ←</button></div>`}
+function bindCommon(){document.querySelectorAll('[data-goto]').forEach(b=>b.onclick=()=>{tx.step=+b.dataset.goto;render()});const back=document.querySelector('#back'),next=document.querySelector('#next');if(back)back.onclick=()=>{tx.step=Math.max(0,tx.step-1);render()};if(next)next.onclick=()=>{if(tx.step===2){Object.values(tx).filter(v=>v&&typeof v==='object').forEach(g=>Object.values(g).forEach?.(x=>{if(x?.value!==undefined)x.verifiedByUser=true}))}tx.step=Math.min(6,tx.step+1);tx.status=tx.step===6?'completed':'draft';save();render()}}
+const binders=[()=>{document.querySelectorAll('[data-camera]').forEach(button=>button.onclick=()=>startCamera(button.dataset.camera));document.querySelectorAll('[data-doc]').forEach(input=>input.onchange=e=>{const file=e.target.files[0];if(!file)return;if(file.size>10*1024*1024)return toast('حجم الملف أكبر من 10 MB');tx.documents[input.dataset.doc]={name:file.name,type:file.type,size:file.size,data:URL.createObjectURL(file),capturedWithCamera:false};save();render()});document.querySelector('.extra-upload input').onchange=e=>{if(e.target.files[0])toast('تمت إضافة المرفق الإضافي')}},()=>{document.querySelector('#startOcr').onclick=()=>{const rows=[...document.querySelectorAll('.process')];document.querySelector('#startOcr').disabled=true;rows.forEach((row,i)=>setTimeout(()=>{row.classList.add('complete');row.querySelector('span').textContent='✓';row.querySelector('small').textContent='اكتمل بنجاح';if(i===rows.length-1)setTimeout(()=>{tx.step=2;save();render()},600)},700*(i+1))) }},()=>{document.querySelectorAll('.field input').forEach(input=>input.oninput=()=>{const x=tx[input.dataset.group][input.dataset.field];x.value=input.value;x.verifiedByUser=true;x.confidence=1;input.closest('.field').classList.remove('low')})},()=>{const sale=document.querySelector('#saleEnabled'),acc=document.querySelector('#accidentEnabled');sale.onchange=()=>{tx.sale.enabled=sale.checked;document.querySelector('#saleFields').classList.toggle('hidden',!sale.checked)};acc.onchange=()=>{tx.accidentReport.enabled=acc.checked;document.querySelector('#accidentFields').classList.toggle('hidden',!acc.checked)};['price','payment','saleDate','condition','notes'].forEach(id=>{const el=document.querySelector('#'+id);if(el)el.onchange=()=>tx.sale[id==='saleDate'?'date':id]=el.value});document.querySelector('#retention').value=tx.autoDeleteDays;document.querySelector('#retention').onchange=e=>tx.autoDeleteDays=+e.target.value;document.querySelector('#accidentFile')?.addEventListener('change',e=>{tx.accidentReport.fileName=e.target.files[0]?.name||'';toast('تم إرفاق تقرير الحوادث')})},()=>{},()=>{setupCanvas('seller');setupCanvas('buyer');document.querySelectorAll('[data-clear]').forEach(b=>b.onclick=()=>{const c=document.querySelector(`#${b.dataset.clear}Canvas`);c.getContext('2d').clearRect(0,0,c.width,c.height);tx.signatures[b.dataset.clear]=''});document.querySelector('#consent').onchange=e=>{if(e.target.checked){['seller','buyer'].forEach(k=>{const c=document.querySelector(`#${k}Canvas`);tx.signatures[k]=c.toDataURL()})}}},()=>{document.querySelector('#downloadPdf').onclick=()=>window.print();document.querySelector('#newTx').onclick=()=>{localStorage.removeItem('naql-current');tx=seed();render()}}];
+function setupCanvas(who){const c=document.querySelector(`#${who}Canvas`),ctx=c.getContext('2d');c.width=c.clientWidth*devicePixelRatio;c.height=170*devicePixelRatio;ctx.scale(devicePixelRatio,devicePixelRatio);ctx.lineWidth=2.2;ctx.lineCap='round';ctx.strokeStyle='#102b46';let drawing=false;const pos=e=>{const r=c.getBoundingClientRect(),p=e.touches?.[0]||e;return [p.clientX-r.left,p.clientY-r.top]};c.onpointerdown=e=>{drawing=true;ctx.beginPath();ctx.moveTo(...pos(e));c.setPointerCapture(e.pointerId)};c.onpointermove=e=>{if(!drawing)return;ctx.lineTo(...pos(e));ctx.stroke()};c.onpointerup=()=>drawing=false}
+function renderHistory(){let stored=[];try{stored=JSON.parse(localStorage.getItem('naql-history')||'[]')}catch{};const samples=[tx,...stored.filter(item=>item.id!==tx.id)];document.querySelector('#content').innerHTML=`<section class="page"><div class="page-top"><div><span class="eyebrow">لوحة المتابعة</span><h1>المعاملات السابقة</h1></div><button class="primary" id="fresh">＋ معاملة جديدة</button></div><div class="history-list">${samples.map((t,i)=>`<article><b class="plate">${t.vehicle.plateNumber.value||'مسودة'}</b><div><h3>${t.buyer.nameAr.value||'مشتري غير محدد'} ← ${t.seller.nameAr.value||'بائع غير محدد'}</h3><p>${new Date(t.createdAt).toLocaleDateString('ar-BH')} • ${t.status==='completed'?'مكتملة':'مسودة'}</p></div><span class="badge ${t.status}">${t.status==='completed'?'مكتملة':'مسودة'}</span><button data-open="${i}">فتح</button><button class="danger" data-delete="${i}">${icon('trash')}</button></article>`).join('')}</div></section>`;document.querySelector('#fresh').onclick=createNewTransaction;document.querySelectorAll('[data-open]').forEach(b=>b.onclick=()=>{tx=samples[+b.dataset.open];view='new';localStorage.setItem('naql-current',JSON.stringify(tx));setActiveNavigation('new');render()});document.querySelectorAll('[data-delete]').forEach(b=>b.onclick=()=>{if(confirm('حذف المعاملة وجميع بياناتها نهائيًا؟')){const removed=samples.splice(+b.dataset.delete,1)[0];localStorage.setItem('naql-history',JSON.stringify(samples.filter(item=>item.id!==tx.id)));if(removed.id===tx.id){tx=seed();localStorage.setItem('naql-current',JSON.stringify(tx))}renderHistory()}})}
+function esc(x){return String(x??'').replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]))}
+function toast(msg){const t=document.querySelector('#toast');t.textContent=msg;t.classList.add('show');clearTimeout(window.toastTimer);window.toastTimer=setTimeout(()=>t.classList.remove('show'),2200)}
+shell();
+if('serviceWorker'in navigator)addEventListener('load',()=>navigator.serviceWorker.register('./sw.js'));
